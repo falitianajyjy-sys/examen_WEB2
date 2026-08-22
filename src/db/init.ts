@@ -16,7 +16,7 @@ async function init() {
         `INSERT INTO users (name, email, password_hash, role)
          VALUES ($1, $2, $3, 'admin')
              ON CONFLICT (email) DO NOTHING`,
-        ["Admin", "admin@examhub.local", passwordHash]
+        ["Jyan_admin", "falitianajyjy@gmail.com", passwordHash]
     );
 
     console.log("Base initialisée, admin créé (ou déjà existant).");

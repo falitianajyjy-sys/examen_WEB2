@@ -27,5 +27,6 @@
     "@types/pg": "^8.23.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^7.0.2"
-  }
+  },
+  "db:init": "ts-node-dev --respawn --transpile-only src/db/init.ts"
 }

@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: jyan35112
+      POSTGRES_DB: exam_hub
+    ports:
+      - "5432:5432"
+    volumes:
+      - examhub_data:/var/lib/postgresql/data
+
+volumes:
+  examhub_data:

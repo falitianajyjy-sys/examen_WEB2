@@ -14,11 +14,12 @@ async function init() {
     const passwordHash = await bcrypt.hash("admin123", 10);
     await pool.query(
         `INSERT INTO users (name, email, password_hash, role)
-     VALUES ($1, $2, $3, 'admin')`,
-        ["Admin", "falitianajyjy@gmail.com", passwordHash]
+         VALUES ($1, $2, $3, 'admin')
+             ON CONFLICT (email) DO NOTHING`,
+        ["Admin", "admin@examhub.local", passwordHash]
     );
 
-    console.log("Base initialisée, admin créé.");
+    console.log("Base initialisée, admin créé (ou déjà existant).");
     await pool.end();
 }
 

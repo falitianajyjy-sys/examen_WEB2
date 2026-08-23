@@ -55,10 +55,3 @@ CREATE TABLE answers (
                          UNIQUE (attempt_id, question_id)
 );
 
-CREATE TABLE IF NOT EXISTS student_answers(
-                        id SERIAL PRIMARY KEY,
-                        attempt_id INTEGER NOT NULL REFERENCES attempt(id) ON DELETE CASCADE,
-                        question_id INTEGER NOT NULL REFERENCES questions(id) ON DELETE RESTRICT,
-                        choice_id INTEGER  REFERENCES choices(id) ON DELETE RESTRICT,
-                        UNIQUE (attempt_id,question_id)
-);

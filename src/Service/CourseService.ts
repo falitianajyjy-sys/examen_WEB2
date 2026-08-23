@@ -13,7 +13,6 @@ export async function createCourse(
     return await CourseRepository.createCourse(code, name, description);
   } catch (err: any) {
     if (err.code === "23505") {
-      // violation de contrainte unique (code déjà utilisé)
       throw { status: 409, message: "Ce code de cours existe déjà" };
     }
     throw err;
@@ -52,7 +51,6 @@ export async function deleteCourse(id: number): Promise<void> {
     await CourseRepository.deleteCourse(id);
   } catch (err: any) {
     if (err.code === "23503") {
-      // violation de clé étrangère (des examens existent pour ce cours)
       throw { status: 409, message: "Impossible de supprimer un cours qui possède des examens" };
     }
     throw err;

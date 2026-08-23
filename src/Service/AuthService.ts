@@ -1,7 +1,7 @@
 // @ts-ignore
 import bcrypt from "bcrypt";
 // @ts-ignore
-import { findUserByEmail } from "../Repository/UserRepository";
+import { findUserByEmail } from "../Repositorie/UserRepository";
 // @ts-ignore
 import { generateToken } from "../Security/jwt";
 

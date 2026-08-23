@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS attempts (
     UNIQUE (student_id, exam_id)
     );
 
+<<<<<<< HEAD
 CREATE TABLE IF NOT EXISTS answers (
                                        id          SERIAL PRIMARY KEY,
                                        attempt_id  INTEGER NOT NULL REFERENCES attempts(id) ON DELETE CASCADE,
@@ -54,3 +55,13 @@ CREATE TABLE IF NOT EXISTS answers (
     choice_id   INTEGER REFERENCES choices(id) ON DELETE RESTRICT,
     UNIQUE (attempt_id, question_id)
     );
+=======
+CREATE TABLE answers (
+                         id          SERIAL PRIMARY KEY,
+                         attempt_id  INTEGER NOT NULL REFERENCES attempts(id) ON DELETE CASCADE,
+                         question_id INTEGER NOT NULL REFERENCES questions(id) ON DELETE RESTRICT,
+                         choice_id   INTEGER REFERENCES choices(id) ON DELETE RESTRICT,
+                         UNIQUE (attempt_id, question_id)
+);
+
+>>>>>>> 8e7c75fb3cfa6bf0ee880c84e6dfdf5530efa0d1

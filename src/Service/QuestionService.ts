@@ -60,5 +60,26 @@ export async function getQuestionsByExamId(
 }
 
 export async function deleteQuestion(id: number): Promise<void> {
+  const examId = await QuestionRepository.getExamIdForQuestion(id);
+  if (!examId) {
+    throw { status: 404, message: "Question introuvable" };
+  }
+  const attemptsCount = await QuestionRepository.countAttemptsForExam(examId);
+  if (attemptsCount > 0) {
+    throw {
+      status: 409,
+      message: "Impossible de supprimer : cet examen a deja des tentatives",
+    };
+  }
   await QuestionRepository.deleteQuestion(id);
+}
+
+export async function updateQuestion(
+    id: number,
+    statement: string,
+    points: number,
+    choices: Choice[]
+): Promise<Question> {
+  validateQuestion(statement, points, choices);
+  return QuestionRepository.updateQuestionWithChoices(id, statement, points, choices);
 }

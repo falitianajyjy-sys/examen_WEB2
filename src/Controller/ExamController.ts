@@ -49,4 +49,7 @@ export async function remove(requete: Request, reponse: Response) {
     } catch (err: any) {
         reponse.status(err.status ?? 500).json({ message: err.message ?? "Erreur serveur" });
     }
+
+
+
 }

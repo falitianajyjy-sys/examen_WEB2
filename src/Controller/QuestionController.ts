@@ -42,3 +42,15 @@ export async function remove(requete: Request, reponse: Response) {
       .json({ message: err.message ?? "Erreur serveur" });
   }
 }
+export async function update(requete: Request, reponse: Response) {
+  try {
+    const id = Number(requete.params.id);
+    const { statement, points, choices } = requete.body;
+    const question = await QuestionService.updateQuestion(id, statement, points ?? 1, choices);
+    reponse.json(question);
+  } catch (err: any) {
+    reponse
+        .status(err.status ?? 500)
+        .json({ message: err.message ?? "Erreur serveur" });
+  }
+}

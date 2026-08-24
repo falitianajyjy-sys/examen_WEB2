@@ -22,6 +22,12 @@ import {
     update as updateExam,
     remove as removeExam,
 } from "./Controller/ExamController";
+import {
+    create as createQuestion,
+    listByExam as listQuestions,
+    update as updateQuestion,
+    remove as removeQuestion,
+} from "./Controller/QuestionController";
 
 dotenv.config();
 
@@ -46,6 +52,11 @@ app.post("/api/exams", requireAuth, requireRole("admin"), createExam);
 app.get("/api/exams/:id", requireAuth, requireRole("admin"), getExam);
 app.put("/api/exams/:id", requireAuth, requireRole("admin"), updateExam);
 app.delete("/api/exams/:id", requireAuth, requireRole("admin"), removeExam);
+
+app.get("/api/exams/:examId/questions", requireAuth, requireRole("admin"), listQuestions);
+app.post("/api/exams/:examId/questions", requireAuth, requireRole("admin"), createQuestion);
+app.put("/api/questions/:id", requireAuth, requireRole("admin"), updateQuestion);
+app.delete("/api/questions/:id", requireAuth, requireRole("admin"), removeQuestion);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Serveur démarré sur le port ${PORT}`));

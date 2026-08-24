@@ -71,3 +71,75 @@ export async function getQuestionsByExamId(
 export async function deleteQuestion(id: number): Promise<void> {
   await pool.query("DELETE FROM questions WHERE id = $1", [id]);
 }
+export async function countAttemptsForExam(examId: number): Promise<number> {
+  const res = await pool.query(
+      "SELECT COUNT(*)::int AS count FROM attempts WHERE exam_id = $1",
+      [examId]
+  );
+  return res.rows[0].count;
+}
+
+export async function getExamIdForQuestion(questionId: number): Promise<number | null> {
+  const res = await pool.query(
+      "SELECT exam_id FROM questions WHERE id = $1",
+      [questionId]
+  );
+  return res.rows[0]?.exam_id ?? null;
+}
+export async function updateQuestionWithChoices(
+    id: number,
+    statement: string,
+    points: number,
+    choices: Choice[],
+): Promise<Question> {
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+
+    const examRes = await client.query(
+        "SELECT exam_id FROM questions WHERE id = $1",
+        [id],
+    );
+    if (!examRes.rows[0]) {
+      throw { status: 404, message: "Question introuvable" };
+    }
+    const examId = examRes.rows[0].exam_id;
+
+    const checkAttempts = await client.query(
+        "SELECT COUNT(*) FROM attempts WHERE exam_id = $1",
+        [examId],
+    );
+    if (parseInt(checkAttempts.rows[0].count, 10) > 0) {
+      throw {
+        status: 409,
+        message:
+            "Impossible de modifier : des etudiants ont deja passe cet examen",
+      };
+    }
+
+    const qRes = await client.query(
+        "UPDATE questions SET statement = $1, points = $2 WHERE id = $3 RETURNING id, exam_id, statement, points",
+        [statement, points, id],
+    );
+    const question = qRes.rows[0];
+
+    await client.query("DELETE FROM choices WHERE question_id = $1", [id]);
+
+    const insertedChoices: Choice[] = [];
+    for (const choice of choices) {
+      const cRes = await client.query(
+          "INSERT INTO choices (question_id, label, is_correct) VALUES ($1, $2, $3) RETURNING id, question_id, label, is_correct",
+          [id, choice.label, choice.is_correct],
+      );
+      insertedChoices.push(cRes.rows[0]);
+    }
+
+    await client.query("COMMIT");
+    return { ...question, choices: insertedChoices };
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
+}

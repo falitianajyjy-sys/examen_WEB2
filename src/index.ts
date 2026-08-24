@@ -9,7 +9,19 @@ import {
     deactivateStudentController,
 } from "./Controller/StudentController";
 import { requireAuth, requireRole } from "./Security/authMiddleware";
-import { create as createCourse, list as listCourses, update as updateCourse, remove as removeCourse } from "./Controller/CourseController";
+import {
+    create as createCourse,
+    list as listCourses,
+    update as updateCourse,
+    remove as removeCourse,
+} from "./Controller/CourseController";
+import {
+    create as createExam,
+    list as listExams,
+    getOne as getExam,
+    update as updateExam,
+    remove as removeExam,
+} from "./Controller/ExamController";
 
 dotenv.config();
 
@@ -28,6 +40,12 @@ app.get("/api/courses", requireAuth, requireRole("admin"), listCourses);
 app.post("/api/courses", requireAuth, requireRole("admin"), createCourse);
 app.put("/api/courses/:id", requireAuth, requireRole("admin"), updateCourse);
 app.delete("/api/courses/:id", requireAuth, requireRole("admin"), removeCourse);
+
+app.get("/api/exams", requireAuth, requireRole("admin"), listExams);
+app.post("/api/exams", requireAuth, requireRole("admin"), createExam);
+app.get("/api/exams/:id", requireAuth, requireRole("admin"), getExam);
+app.put("/api/exams/:id", requireAuth, requireRole("admin"), updateExam);
+app.delete("/api/exams/:id", requireAuth, requireRole("admin"), removeExam);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Serveur démarré sur le port ${PORT}`));

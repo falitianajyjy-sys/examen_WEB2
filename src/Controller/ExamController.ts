@@ -53,3 +53,12 @@ export async function remove(requete: Request, reponse: Response) {
 
 
 }
+export async function results(requete: Request, reponse: Response) {
+    try {
+        const id = Number(requete.params.id);
+        const data = await ExamService.getExamResults(id);
+        reponse.json(data);
+    } catch (err: any) {
+        reponse.status(err.status ?? 500).json({ message: err.message ?? "Erreur serveur" });
+    }
+}

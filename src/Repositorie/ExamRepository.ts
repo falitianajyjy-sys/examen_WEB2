@@ -48,3 +48,24 @@ export async function updateExam(
 export async function deleteExam(id: number): Promise<void> {
     await pool.query("DELETE FROM exams WHERE id = $1", [id]);
 }
+export async function getExamResults(examId: number) {
+    const res = await pool.query(
+        `SELECT u.id AS student_id, u.name, u.email, a.score, a.submitted_at
+         FROM attempts a
+         JOIN users u ON u.id = a.student_id
+         WHERE a.exam_id = $1
+         ORDER BY a.submitted_at`,
+        [examId]
+    );
+    return res.rows;
+}
+
+export async function getExamAverageAndCount(examId: number) {
+    const res = await pool.query(
+        `SELECT COUNT(*)::int AS attempts_count, COALESCE(AVG(score), 0)::float AS average
+         FROM attempts
+         WHERE exam_id = $1`,
+        [examId]
+    );
+    return res.rows[0];
+}

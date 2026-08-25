@@ -71,3 +71,17 @@ export async function deleteExam(id: number): Promise<void> {
         throw err;
     }
 }
+export async function getExamResults(examId: number) {
+    const exam = await ExamRepository.getExamById(examId);
+    if (!exam) {
+        throw { status: 404, message: "Examen introuvable" };
+    }
+    const students = await ExamRepository.getExamResults(examId);
+    const { attempts_count, average } = await ExamRepository.getExamAverageAndCount(examId);
+    return {
+        exam_id: examId,
+        attempts_count,
+        average,
+        students,
+    };
+}

@@ -60,3 +60,13 @@ app.delete("/api/questions/:id", requireAuth, requireRole("admin"), removeQuesti
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Serveur démarré sur le port ${PORT}`));
+import {
+    listMyExams,
+    getMyExam,
+    submitMyExam,
+    getMyResults,
+} from "./Controller/ExamStudentController";
+app.get("/api/my/exams", requireAuth, requireRole("etudiant"), listMyExams);
+app.get("/api/my/exams/:id", requireAuth, requireRole("etudiant"), getMyExam);
+app.post("/api/my/exams/:id/submit", requireAuth, requireRole("etudiant"), submitMyExam);
+app.get("/api/my/results", requireAuth, requireRole("etudiant"), getMyResults);
